@@ -1,0 +1,9 @@
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\bin\Debug\GADemoFromZhihu.exe
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\bin\Debug\GADemoFromZhihu.pdb
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.csprojResolveAssemblyReference.cache
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.Form1.resources
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.Properties.Resources.resources
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.csproj.GenerateResource.Cache
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.exe
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.pdb
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\bin\Debug\GADemoFromZhihu.exe.config
