@@ -51,5 +51,17 @@ namespace GADemoFromZhihu
             return selectedChromosomes;
         }
 
+        public List<Chromosome> Crossover(List<Chromosome> parents)
+        {
+            var children = new List<Chromosome>();
+            var childQuantity = Chromosomes.Count - parents.Count;
+
+            for (int i = 0; i < childQuantity; i++)
+            {
+                
+            }
+
+        }
+
     }
 }
