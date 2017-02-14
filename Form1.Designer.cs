@@ -50,6 +50,7 @@
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox1.Size = new System.Drawing.Size(541, 439);
             this.textBox1.TabIndex = 1;
+            this.textBox1.Visible = false;
             // 
             // Form1
             // 
