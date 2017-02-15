@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace GADemoFromZhihu
@@ -55,8 +53,6 @@ namespace GADemoFromZhihu
 //            }
 //
 //            Console.WriteLine("hello world");
-
-
         }
     }
 }

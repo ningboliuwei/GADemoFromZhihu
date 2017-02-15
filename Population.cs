@@ -47,7 +47,46 @@ namespace GADemoFromZhihu
 
             var result = Clone();
             result.Chromosomes = selectedChromosomes;
-           return result;
+            return result;
+        }
+
+        //轮盘赌选择法
+        public Population RouletteSelect()
+        {
+            var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitnetss).ToList();
+            var totalFitnetss = sortedChromosomes.Sum(c => c.Fitnetss);
+            var selectedChromosomes = new List<Chromosome>();
+
+            //所有染色体的选择概率
+            var selectionRateList = (from c in sortedChromosomes
+                select c.Fitnetss / totalFitnetss).ToList();
+
+            //所有染色体的累积选择概率
+            var sumedSelectionRateList = new List<double>();
+
+            for (var i = 0; i < selectionRateList.Count; i++)
+            {
+                double sum = 0;
+                for (var j = 0; j <= i; j++)
+                    sum += selectionRateList[j];
+                sumedSelectionRateList.Add(sum);
+            }
+
+            //根据生成的 0~1 之间的随机数，根据累积概率决定哪些染色体存活下来（在该染色体的累积概率区间内）。
+
+            var rnd = new Random();
+            var dice = rnd.NextDouble();
+
+            if (dice <= sumedSelectionRateList[0])
+                selectedChromosomes.Add(sortedChromosomes[0]);
+
+            for (var i = 1; i < sortedChromosomes.Count; i++)
+                if (dice > sumedSelectionRateList[i - 1] && dice <= sumedSelectionRateList[i])
+                    selectedChromosomes.Add(sortedChromosomes[i]);
+
+            var result = Clone();
+            result.Chromosomes = selectedChromosomes;
+            return result;
         }
 
         //返回由当前种群进行 crossover 后所得到的孩子集合
@@ -76,20 +115,9 @@ namespace GADemoFromZhihu
                     for (var j = 0; j < span; j++)
                         motherMask += 1 << j;
 
-                    var child = father.Value & fatherMask | mother.Value & motherMask;
+                    var child = (father.Value & fatherMask) | (mother.Value & motherMask);
 
-                    children.Add(new Chromosome { Length = ChromosomeLength, Value = child });
-                    //
-                    //                    var s8 = crossPos.ToString();
-                    //                    var s6 = Convert.ToString(father.Value, 2).PadLeft(Length, '0').PadRight(20);
-                    //                    var s7 = Convert.ToString(mother.Value, 2).PadLeft(Length, '0').PadRight(20);
-                    //                    var s1 = Convert.ToString(fatherMask, 2).PadLeft(Length, '0').PadRight(20);
-                    //                    var s2 = Convert.ToString(motherMask, 2).PadLeft(Length, '0').PadRight(20);
-                    //                    var s3 = Convert.ToString(fatherMasked, 2).PadLeft(Length, '0').PadRight(20);
-                    //                    var s4 = Convert.ToString(motherMasked, 2).PadLeft(Length, '0').PadRight(20);
-                    //                    var s5 = Convert.ToString(child, 2).PadLeft(Length, '0').PadRight(20);
-                    //
-                    //                    Console.WriteLine($"{s8}\n{s6}{s1}{s3}\n{s7}{s2}{s4}\n{s5}");
+                    children.Add(new Chromosome {Length = ChromosomeLength, Value = child});
                 }
             }
 
@@ -101,25 +129,22 @@ namespace GADemoFromZhihu
         //当前种群进行变异
         public void Mutate()
         {
-            Random rnd = new Random();
+            var rnd = new Random();
             //将现有的染色体集合复制到 result 集合中去
 
             foreach (var p in Chromosomes)
-            {
                 if (rnd.NextDouble() < MutationRate)
                 {
-                    int mutationPos = rnd.Next(0, ChromosomeLength);
+                    var mutationPos = rnd.Next(0, ChromosomeLength);
 
                     p.Value = p.Value ^ (1 << (ChromosomeLength - mutationPos - 1));
-                    //                    Console.WriteLine(" " + mutationPos + " " + Convert.ToString(n, 2).PadLeft(Length, '0') + " " + Convert.ToString(p.Value, 2).PadLeft(Length, '0') + "\n");
                 }
-            }
         }
 
         //返回一个与当前种群参数相同，但不包含任何染色体实例的种群（即返回具有相同参数的空种群）
         public Population Clone()
         {
-            Population copy = MemberwiseClone() as Population;
+            var copy = MemberwiseClone() as Population;
 
             if (copy != null)
             {
@@ -133,15 +158,13 @@ namespace GADemoFromZhihu
         //返回一个与当前种群参数相同，且具有完全一样的染色体集合的种群
         public Population Copy()
         {
-            Population copy = MemberwiseClone() as Population;
+            var copy = MemberwiseClone() as Population;
 
             if (copy != null)
             {
                 copy.Chromosomes = new List<Chromosome>();
                 foreach (var c in Chromosomes)
-                {
                     copy.Chromosomes.Add(c);
-                }
 
                 return copy;
             }
@@ -149,10 +172,11 @@ namespace GADemoFromZhihu
             return null;
         }
 
-
+        //当前种群进化
         public void Envolve()
         {
-            var parents = Select();
+            //            var parents = Select();
+            var parents = RouletteSelect();
             var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
             Chromosomes.Clear();
             Chromosomes.AddRange(parents.Chromosomes);
