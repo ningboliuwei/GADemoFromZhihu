@@ -13,7 +13,7 @@ namespace GADemoFromZhihu
         public int ChromosomeLength { get; set; }
 
         //随机生成数量为 chromosomeQuantity，每个染色体长度为 ChromosomeLength 的染色体集合
-        public void RandomGenerate(int chromosomeQuantity)
+        public void RandomGenerateChromosome(int chromosomeQuantity)
         {
             var rnd = new Random();
 
@@ -25,9 +25,34 @@ namespace GADemoFromZhihu
                 for (var j = 0; j < ChromosomeLength; j++)
                 {
                     chromosome.Value += (1 << j) * Convert.ToInt32(rnd.Next(0, 2));
-                    chromosome.Length = ChromosomeLength;
                 }
 
+                chromosome.Length = ChromosomeLength;
+                Chromosomes.Add(chromosome);
+            }
+        }
+
+        //多参数级联编码
+        public void RandomGenerateMultipleParametersChromosome(int chromosomeQuantity, int parameterQuantity)
+        {
+            var rnd = new Random();
+
+            for (var i = 0; i < chromosomeQuantity; i++)
+            {
+                
+                var chromosome = new Chromosome();
+                for (int j = 0; j < parameterQuantity; j++)
+                {
+                    //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
+                    var segment = 0;
+                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / parameterQuantity);
+                    for (var k = 0; k < singleChromosomeLength; k++)
+                    {
+                        segment += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
+                    }
+                    chromosome.Value += segment << (parameterQuantity - j - 1) * singleChromosomeLength;
+                }
+                chromosome.Length = ChromosomeLength;
                 Chromosomes.Add(chromosome);
             }
         }
@@ -35,7 +60,7 @@ namespace GADemoFromZhihu
         //返回一个选择后的种群
         public Population Select()
         {
-            var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitnetss).ToList();
+            var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitness).ToList();
 
             var retainQuantity = Convert.ToInt32(sortedChromosomes.Count * RetainRate);
             var selectedChromosomes = sortedChromosomes.Take(retainQuantity).ToList();
@@ -53,13 +78,13 @@ namespace GADemoFromZhihu
         //轮盘赌选择法
         public Population RouletteSelect()
         {
-            var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitnetss).ToList();
-            var totalFitnetss = sortedChromosomes.Sum(c => c.Fitnetss);
+            var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitness).ToList();
+            var totalFitnetss = sortedChromosomes.Sum(c => c.Fitness);
             var selectedChromosomes = new List<Chromosome>();
 
             //所有染色体的选择概率
             var selectionRateList = (from c in sortedChromosomes
-                select c.Fitnetss / totalFitnetss).ToList();
+                select c.Fitness / totalFitnetss).ToList();
 
             //所有染色体的累积选择概率
             var sumedSelectionRateList = new List<double>();
