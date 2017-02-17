@@ -14,15 +14,17 @@ namespace GADemoFromZhihu
         {
             get
             {
-                var x = DecodedValue;
+                var x = GetDecodedValue(Value);
 
                 return TestFunction.Function2(x);
             }
         }
 
-        public double DecodedValue
-            => TestFunction.LowerBound + Value * (TestFunction.UpperBound - TestFunction.LowerBound) /
-               (Math.Pow(2, Length) - 1);
+        public double GetDecodedValue(double value)
+        {
+            return TestFunction.LowerBound + value * (TestFunction.UpperBound - TestFunction.LowerBound) /
+                   (Math.Pow(2, Length) - 1);
+        }
 
         //根据染色体得到级联的多参数的各个参数的值（解码前）
         public List<double> GetPartlyValues(int valueQuantity)
@@ -31,9 +33,11 @@ namespace GADemoFromZhihu
             var singleChromosomeLength = Convert.ToInt32(Length / valueQuantity);
             var values = new List<double>();
 
+            //生成 singleChromosomeLength 个 1 的掩码
             for (var i = 0; i < singleChromosomeLength; i++)
                 mask += 1 << i;
 
+            //获取每个片段的值
             for (var i = 0; i < valueQuantity; i++)
             {
                 var space = (valueQuantity - i - 1) * singleChromosomeLength;
@@ -46,7 +50,7 @@ namespace GADemoFromZhihu
 
         public string Output()
         {
-            var decodeValue = DecodedValue;
+            var decodeValue = GetDecodedValue(Value);
 
             return Convert.ToString(Value, 2).PadLeft(Length, '0').PadRight(OutputWidth, ' ') +
                    decodeValue.ToString().PadRight(OutputWidth, ' ') + Fitness.ToString().PadRight(OutputWidth, ' ') +
