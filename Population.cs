@@ -23,9 +23,7 @@ namespace GADemoFromZhihu
                 var chromosome = new Chromosome();
 
                 for (var j = 0; j < ChromosomeLength; j++)
-                {
                     chromosome.Value += (1 << j) * Convert.ToInt32(rnd.Next(0, 2));
-                }
 
                 chromosome.Length = ChromosomeLength;
                 Chromosomes.Add(chromosome);
@@ -39,18 +37,15 @@ namespace GADemoFromZhihu
 
             for (var i = 0; i < chromosomeQuantity; i++)
             {
-                
                 var chromosome = new Chromosome();
-                for (int j = 0; j < parameterQuantity; j++)
+                for (var j = 0; j < parameterQuantity; j++)
                 {
                     //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
                     var segment = 0;
                     var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / parameterQuantity);
                     for (var k = 0; k < singleChromosomeLength; k++)
-                    {
                         segment += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
-                    }
-                    chromosome.Value += segment << (parameterQuantity - j - 1) * singleChromosomeLength;
+                    chromosome.Value += segment << ((parameterQuantity - j - 1) * singleChromosomeLength);
                 }
                 chromosome.Length = ChromosomeLength;
                 Chromosomes.Add(chromosome);
@@ -84,7 +79,7 @@ namespace GADemoFromZhihu
 
             //所有染色体的选择概率
             var selectionRateList = (from c in sortedChromosomes
-                select c.Fitness / totalFitnetss).ToList();
+                                     select c.Fitness / totalFitnetss).ToList();
 
             //所有染色体的累积选择概率
             var sumedSelectionRateList = new List<double>();
@@ -142,7 +137,7 @@ namespace GADemoFromZhihu
 
                     var child = (father.Value & fatherMask) | (mother.Value & motherMask);
 
-                    children.Add(new Chromosome {Length = ChromosomeLength, Value = child});
+                    children.Add(new Chromosome { Length = ChromosomeLength, Value = child });
                 }
             }
 
@@ -200,12 +195,17 @@ namespace GADemoFromZhihu
         //当前种群进化
         public void Envolve()
         {
-            //            var parents = Select();
-            var parents = RouletteSelect();
+            //精英选择
+            var parents = Select();
+            //轮盘赌选择
+            //            var parents = RouletteSelect();
+            //crossover 得到子女种群
             var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
             Chromosomes.Clear();
+            //将选择出来的所有父母染色体，及他们 crossover 得到的子女，作为新的种群
             Chromosomes.AddRange(parents.Chromosomes);
             Chromosomes.AddRange(children.Chromosomes);
+            //变异
             Mutate();
         }
     }

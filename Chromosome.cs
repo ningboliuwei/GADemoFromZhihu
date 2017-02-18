@@ -9,14 +9,14 @@ namespace GADemoFromZhihu
         public int Length { get; set; }
         public int Value { get; set; }
 
-
         public double Fitness
         {
             get
             {
-                var x = GetDecodedValue(Value);
+                //                var decodedValue = GetDecodedValue(Value);
+                var values = GetPartlyValues(2);
 
-                return TestFunction.Function2(x);
+                return double.MaxValue - TestFunction.BranchTestFitness(Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
             }
         }
 
