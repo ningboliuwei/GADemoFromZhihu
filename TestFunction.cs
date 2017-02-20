@@ -19,14 +19,14 @@ namespace GADemoFromZhihu
             return x + 10 * Math.Sin(5 * x) + 7 * Math.Cos(4 * x);
         }
 
-        public static string BranchTest(int x, int y)
+        public static string BranchTest(int x)
         {
-            var path = "";
+            var path = "#";
 
-            if (x > 10)
+            if (x >= 1000)
             {
                 path += "a";
-                if (y > 20)
+                if (x < 1001)
                 {
                     path += "b";
                 }
@@ -35,41 +35,41 @@ namespace GADemoFromZhihu
             return path;
         }
 
-        public static double BranchTestFitness(int x, int y)
+        public static double BranchTestFitness(int x)
         {
             var f1 = 0;
             var f2 = 0;
             const int k = 1;
             //
-            if (10 - x < 0)
+            if (1000 - x <= 0)
             {
                 f1 = 0;
             }
             else
             {
-                f1 = Math.Abs(10 - x) + k;
+                f1 = Math.Abs(1000 - x) ;
             }
             //
 
-            if (x > 10)
+            if (x > 1000)
             {
                 //
-                if (20 - y < 0)
+                if (1001 - x > 0)
                 {
                     f2 = 0;
                 }
                 else
                 {
-                    f2=Math.Abs(20-y) + k;
+                    f2=Math.Abs(1001-x) + k;
                 }
                 //
-                if (y > 20)
+                if (x < 1001)
                 {
                     
                 }
             }
 
-            return Math.Abs(f1 + f2);
+            return f1 + f2;
         }
 
         //a —— 非三角形， b —— 等边三角形，c —— 等腰三角形，d —— 一般三角形

@@ -196,9 +196,9 @@ namespace GADemoFromZhihu
         public void Envolve()
         {
             //精英选择
-            var parents = Select();
+//            var parents = Select();
             //轮盘赌选择
-            //            var parents = RouletteSelect();
+                        var parents = RouletteSelect();
             //crossover 得到子女种群
             var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
             Chromosomes.Clear();

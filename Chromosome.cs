@@ -5,7 +5,7 @@ namespace GADemoFromZhihu
 {
     public class Chromosome
     {
-        private const int OutputWidth = 30;
+        private const int OutputWidth = 300;
         public int Length { get; set; }
         public int Value { get; set; }
 
@@ -16,7 +16,7 @@ namespace GADemoFromZhihu
                 //                var decodedValue = GetDecodedValue(Value);
                 var values = GetPartlyValues(2);
 
-                return double.MaxValue - TestFunction.BranchTestFitness(Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
+                return 100000 - TestFunction.BranchTestFitness(Convert.ToInt32(values[0]));
             }
         }
 

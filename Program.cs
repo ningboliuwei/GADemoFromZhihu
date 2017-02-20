@@ -8,7 +8,7 @@ namespace GADemoFromZhihu
         //染色体数量
         private const int ChromosomeQuantity = 300;
         //染色体长度
-        private const int ChromosomeLength = 22;
+        private const int ChromosomeLength = 11;
         //存活率
         private const double RetainRate = 0.2;
         //变异率
@@ -34,18 +34,18 @@ namespace GADemoFromZhihu
             };
             //
             //            //随机生成染色体
-//            population.RandomGenerateChromosome(ChromosomeQuantity);
+            population.RandomGenerateChromosome(ChromosomeQuantity);
 
             //随机生成用于 2 个值的染色体（）
-            population.RandomGenerateMultipleParametersChromosome(ChromosomeQuantity, 2);
-
-            foreach (var c in population.Chromosomes)
-            {
-                var values = c.GetPartlyValues(2);
-
-                Console.WriteLine($@" {Convert.ToString(c.Value, 2).PadLeft(ChromosomeLength, '0').PadRight(30) }{values[0]}, {values[1]}, {TestFunction.BranchTest(Convert.ToInt32(values[0]), Convert.ToInt32(values[1]))}, {double.MaxValue - c.Fitness}");
-                //                Console.WriteLine($@"after {i + 1:000} envolve(s): {Convert.ToString(result.v, 2).PadLeft(ChromosomeLength, '0').PadRight(30) }{result.paras[0]}, {result.paras[1]}, {maxFitnetss} {TestFunction.BranchTest(Convert.ToInt32(result.paras[0]), Convert.ToInt32(result.paras[1]))}");
-            }
+//            population.RandomGenerateMultipleParametersChromosome(ChromosomeQuantity, 2);
+//
+//            foreach (var c in population.Chromosomes)
+//            {
+//                var values = c.GetPartlyValues(2);
+//
+//                Console.WriteLine($@" {Convert.ToString(c.Value, 2).PadLeft(ChromosomeLength, '0').PadRight(30) }{values[0]}, {values[1]}, {TestFunction.BranchTest(Convert.ToInt32(values[0]), Convert.ToInt32(values[1]))}, {100000 - c.Fitness}");
+//                //                Console.WriteLine($@"after {i + 1:000} envolve(s): {Convert.ToString(result.v, 2).PadLeft(ChromosomeLength, '0').PadRight(30) }{result.paras[0]}, {result.paras[1]}, {maxFitnetss} {TestFunction.BranchTest(Convert.ToInt32(result.paras[0]), Convert.ToInt32(result.paras[1]))}");
+//            }
             
 
 //            foreach (var p in population.Chromosomes.OrderByDescending(c => c.Fitness))
@@ -66,22 +66,24 @@ namespace GADemoFromZhihu
             //                Console.WriteLine();
             //            }
             //
-//            for (var i = 0; i < GenerationQuantity; i++)
-//            {
-//                population.Envolve();
-//
-//                //找出拥有每一代最高 Fitnetss 值的那个实际的解
-//                var maxFitnetss = population.Chromosomes.Max(n => n.Fitness);
-//                //                var result = from c in population.Chromosomes
-//                //                    where Math.Abs(c.Fitness - population.Chromosomes.Max(n => n.Fitness)) < Precision
-//                //                    select c.GetDecodedValue(c.Value);
-//                                var result = (from c in population.Chromosomes
-//                                    where c.Fitness == maxFitnetss
-//                                    select new {v =c.Value, paras= c.GetPartlyValues(2)}).ToList()[0];
-//
-//                Console.WriteLine($@"after {i + 1:000} envolve(s): {Convert.ToString(result.v, 2).PadLeft(ChromosomeLength, '0').PadRight(30) }{result.paras[0]}, {result.paras[1]}, {maxFitnetss} {TestFunction.BranchTest(Convert.ToInt32(result.paras[0]), Convert.ToInt32(result.paras[1]))}");
-//
-//            }
+            for (var i = 0; i < GenerationQuantity; i++)
+            {
+                population.Envolve();
+
+                //找出拥有每一代最高 Fitnetss 值的那个实际的解
+                var maxFitnetss = population.Chromosomes.Max(n => n.Fitness);
+                //                var result = from c in population.Chromosomes
+                //                    where Math.Abs(c.Fitness - population.Chromosomes.Max(n => n.Fitness)) < Precision
+                //                    select c.GetDecodedValue(c.Value);
+                                                var result = (from c in population.Chromosomes
+                                                    where c.Fitness == maxFitnetss
+                                                    select new {v =c.Value, paras= c.Value}).ToList()[0];
+
+                Console.WriteLine($@"after {i + 1:000} envolve(s): {Convert.ToString(result.v, 2).PadLeft(ChromosomeLength, '0').PadRight(30) }{result.paras}, {maxFitnetss} {TestFunction.BranchTest(Convert.ToInt32(result.paras))}");
+
+                //                Console.WriteLine($@"after {i + 1:000} envolve(s): {Convert.ToString(result.v, 2).PadLeft(ChromosomeLength, '0').PadRight(30) }{result.paras[0]}, {result.paras[1]}, {maxFitnetss} {TestFunction.BranchTest(Convert.ToInt32(result.paras[0]), Convert.ToInt32(result.paras[1]))}");
+
+            }
 
 
             //            Console.WriteLine("0 —— 非三角形， 1 —— 等边三角形，2 —— 等腰三角形，3 —— 一般三角形");
