@@ -4,50 +4,65 @@ using System.Linq;
 
 namespace GADemoFromZhihu
 {
-    internal class Population
+    public class Population
     {
-        public List<Chromosome> Chromosomes { get; set; } = new List<Chromosome>();
-        public double RetainRate { get; set; }
-        public double SelectionRate { get; set; }
-        public double MutationRate { get; set; }
-        public int ChromosomeLength { get; set; }
-
-        //随机生成数量为 chromosomeQuantity，每个染色体长度为 ChromosomeLength 的染色体集合
-        public void RandomGenerateChromosome(int chromosomeQuantity)
+        public Population(double retainRate, double selectionRate, double mutationRate, int chromosomeLength,
+            int chromosomeQuantity, int subValueQuantity)
         {
-            var rnd = new Random();
-
-            for (var i = 0; i < chromosomeQuantity; i++)
-            {
-                //随机生成一个长度为 length 的染色体，每位(基因)是 1 或 0
-                var chromosome = new Chromosome();
-
-                for (var j = 0; j < ChromosomeLength; j++)
-                    chromosome.Value += (1 << j) * Convert.ToInt32(rnd.Next(0, 2));
-
-                chromosome.Length = ChromosomeLength;
-                Chromosomes.Add(chromosome);
-            }
+            RetainRate = retainRate;
+            SelectionRate = selectionRate;
+            MutationRate = mutationRate;
+            ChromosomeLength = chromosomeLength;
+            SubValueQuantity = subValueQuantity;
+            ChromosomeQuantity = chromosomeQuantity;
         }
 
-        //多参数级联编码
-        public void RandomGenerateMultipleParametersChromosome(int chromosomeQuantity, int parameterQuantity)
+        //染色体集合
+        public List<Chromosome> Chromosomes { get; private set; } = new List<Chromosome>();
+        //（需要的）染色体个数
+        public int ChromosomeQuantity { get; set; }
+        //存活率
+        public double RetainRate { get; set; }
+        //（随机）选择率
+        public double SelectionRate { get; set; }
+        //变异率
+        public double MutationRate { get; set; }
+        //子值数量（多参数级联情况下）
+        public int SubValueQuantity { get; }
+        //染色体长度（总长度）
+        public int ChromosomeLength { get; }
+
+        //随机生成若干染色体
+        public void RandomGenerateChromosome()
         {
             var rnd = new Random();
 
-            for (var i = 0; i < chromosomeQuantity; i++)
+            for (var i = 0; i < ChromosomeQuantity; i++)
             {
-                var chromosome = new Chromosome();
-                for (var j = 0; j < parameterQuantity; j++)
-                {
-                    //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
-                    var segment = 0;
-                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / parameterQuantity);
-                    for (var k = 0; k < singleChromosomeLength; k++)
-                        segment += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
-                    chromosome.Value += segment << ((parameterQuantity - j - 1) * singleChromosomeLength);
-                }
-                chromosome.Length = ChromosomeLength;
+                var chromosome = new Chromosome {Population = this};
+
+                #region 暂时废弃 
+
+                //先随机生成 N 个片段，再合并
+                //                for (var j = 0; j < SubValueQuantity; j++)
+                //                {
+                //                    //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
+                //                    var segment = 0;
+                //                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / SubValueQuantity);
+                //
+                //                    //生成其中的
+                //                    for (var k = 0; k < singleChromosomeLength; k++)
+                //                        segment += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
+                //
+                //                    chromosome.Value += segment << ((SubValueQuantity - j - 1) * singleChromosomeLength);
+                //                }
+
+                #endregion
+
+                //随机生成 ChromosomeLength 个 0 或 1，并拼接起来
+                for (var k = 0; k < ChromosomeLength; k++)
+                    chromosome.Value += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
+
                 Chromosomes.Add(chromosome);
             }
         }
@@ -71,7 +86,7 @@ namespace GADemoFromZhihu
         }
 
         //轮盘赌选择法
-        public Population RouletteSelect()
+        private Population RouletteSelect()
         {
             var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitness).ToList();
             var totalFitnetss = sortedChromosomes.Sum(c => c.Fitness);
@@ -79,8 +94,7 @@ namespace GADemoFromZhihu
 
             //所有染色体的选择概率
             var selectionRateList = (from c in sortedChromosomes
-                                     select c.Fitness / totalFitnetss).ToList();
-
+                select c.Fitness / totalFitnetss).ToList();
             //所有染色体的累积选择概率
             var sumedSelectionRateList = new List<double>();
 
@@ -93,7 +107,6 @@ namespace GADemoFromZhihu
             }
 
             //根据生成的 0~1 之间的随机数，根据累积概率决定哪些染色体存活下来（在该染色体的累积概率区间内）。
-
             var rnd = new Random();
             var dice = rnd.NextDouble();
 
@@ -135,9 +148,9 @@ namespace GADemoFromZhihu
                     for (var j = 0; j < span; j++)
                         motherMask += 1 << j;
 
-                    var child = (father.Value & fatherMask) | (mother.Value & motherMask);
+                    var childValue = (father.Value & fatherMask) | (mother.Value & motherMask);
 
-                    children.Add(new Chromosome { Length = ChromosomeLength, Value = child });
+                    children.Add(new Chromosome {Population = this, Value = childValue});
                 }
             }
 
@@ -198,7 +211,7 @@ namespace GADemoFromZhihu
             //精英选择
 //            var parents = Select();
             //轮盘赌选择
-                        var parents = RouletteSelect();
+            var parents = RouletteSelect();
             //crossover 得到子女种群
             var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
             Chromosomes.Clear();

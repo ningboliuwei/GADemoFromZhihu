@@ -9,7 +9,7 @@ namespace GADemoFromZhihu
         //解空间的上界
         public const double UpperBound = 9;
 
-        public double Function1(double x)
+        public static double Function1(double x)
         {
             return x * Math.Sin(10 * Math.PI * x) + 2.0;
         }
