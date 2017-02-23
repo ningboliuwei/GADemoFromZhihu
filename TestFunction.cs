@@ -5,21 +5,31 @@ namespace GADemoFromZhihu
     public class TestFunction
     {
         //解空间的下界
-        public const double LowerBound = 0;
+        public static double LowerBound = 0;
         //解空间的上界
-        public const double UpperBound = 9;
+        public static double UpperBound = 0;
 
+
+        public static void SetBound(double lowerBound, double upperBound)
+        {
+            LowerBound = lowerBound;
+            UpperBound = upperBound;
+        }
+
+        //解空间 [0,1]
         public static double Function1(double x)
         {
             return x * Math.Sin(10 * Math.PI * x) + 2.0;
         }
 
+        //解空间 7[0,9]
         public static double Function2(double x)
         {
             return x + 10 * Math.Sin(5 * x) + 7 * Math.Cos(4 * x);
         }
 
-        public static string BranchTest(int x)
+        //简单分支函数
+        public static string BranchTest1(int x)
         {
             var path = "#";
 
@@ -35,7 +45,8 @@ namespace GADemoFromZhihu
             return path;
         }
 
-        public static double BranchTestFitness(int x)
+        //简单分支函数（插桩，用于计算适应度）
+        public static double StubbedBranchTest1(int x)
         {
             var f1 = 0;
             var f2 = 0;
@@ -47,7 +58,7 @@ namespace GADemoFromZhihu
             }
             else
             {
-                f1 = Math.Abs(1000 - x) ;
+                f1 = Math.Abs(1000 - x);
             }
             //
 
@@ -60,20 +71,20 @@ namespace GADemoFromZhihu
                 }
                 else
                 {
-                    f2=Math.Abs(1001-x) + k;
+                    f2 = Math.Abs(1001 - x) + k;
                 }
                 //
                 if (x < 1001)
                 {
-                    
+
                 }
             }
 
-            return f1 + f2;
+            return f1==0?0:1/f1 + f2==0?0:1/f2;
         }
 
         //a —— 非三角形， b —— 等边三角形，c —— 等腰三角形，d —— 一般三角形
-        public static string TriangleType(int x, int y, int z)
+        public static string TriangleTypeTest(int x, int y, int z)
         {
             string type = "";
 

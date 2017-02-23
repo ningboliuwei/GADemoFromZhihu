@@ -77,7 +77,7 @@ namespace GADemoFromZhihu
                     where c.Fitness == maxFitnetss
                     select c).First();
                 //
-                Console.WriteLine($@"after {i + 1:000} envolve(s):{OutputHelper.DisplayChromosomeInfo(result)}");
+                Console.WriteLine($@"after {i + 1:000} envolve(s):{OutputHelper.DisplayChromosomeInfo(result)} {result.Fitness}");
 
 
 

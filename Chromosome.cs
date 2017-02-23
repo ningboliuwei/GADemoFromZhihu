@@ -7,6 +7,7 @@ namespace GADemoFromZhihu
     {
         public Population Population { get; set; }
         public int Value { get; set; }
+
         public List<int> SubValues
         {
             get
@@ -32,7 +33,20 @@ namespace GADemoFromZhihu
             }
         }
 
-        public double Fitness => TestFunction.Function2(GetDecodedValue(Value));
+        public double Fitness
+        {
+            get
+            {
+                //更换测试函数，就改这里
+//                TestFunction.SetBound(0, 9);
+//                return TestFunction.Function2(GetDecodedValue(Value));
+
+                TestFunction.SetBound(0,10000);
+                return TestFunction.StubbedBranchTest1(Convert.ToInt32(GetDecodedValue(Value)));
+            }
+
+            private set { }
+        }
 
         //得到将染色体值转换为在解空间对应的值
         public double GetDecodedValue(double value)

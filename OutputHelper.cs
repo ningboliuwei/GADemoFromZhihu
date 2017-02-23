@@ -8,13 +8,12 @@ namespace GADemoFromZhihu
 {
     class OutputHelper
     {
-        public const int TotalWidth = 30;
 
         public  static string DisplayChromosomeInfo(Chromosome chromosome)
         {
             return Convert.ToString(chromosome.Value, 2)
                        .PadLeft(chromosome.Population.ChromosomeLength, '0')
-                       .PadRight(TotalWidth) + chromosome.GetDecodedValue(chromosome.Value);
+                       .PadRight(20) + chromosome.GetDecodedValue(chromosome.Value);
         }
     }
 }
