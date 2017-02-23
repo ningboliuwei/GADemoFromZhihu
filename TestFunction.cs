@@ -29,14 +29,14 @@ namespace GADemoFromZhihu
         }
 
         //简单分支函数
-        public static string BranchTest1(int x)
+        public static string BranchTest1(int x, int y)
         {
             var path = "#";
 
             if (x >= 1000)
             {
                 path += "a";
-                if (x < 1001)
+                if (y < 50)
                 {
                     path += "b";
                 }
@@ -46,7 +46,7 @@ namespace GADemoFromZhihu
         }
 
         //简单分支函数（插桩，用于计算适应度）
-        public static double StubbedBranchTest1(int x)
+        public static double StubbedBranchTest1(int x, int y)
         {
             var f1 = 0;
             var f2 = 0;
@@ -58,29 +58,23 @@ namespace GADemoFromZhihu
             }
             else
             {
-                f1 = Math.Abs(1000 - x);
+                f1 = Math.Abs(1000 - x) + k;
             }
             //
 
             if (x > 1000)
             {
-                //
-                if (1001 - x > 0)
+                if (y - 50 < 0)
                 {
                     f2 = 0;
                 }
                 else
                 {
-                    f2 = Math.Abs(1001 - x) + k;
-                }
-                //
-                if (x < 1001)
-                {
-
+                    f2 = Math.Abs(50 - y) + k;
                 }
             }
 
-            return f1==0?0:1/f1 + f2==0?0:1/f2;
+            return - (f1 + f2);
         }
 
         //a —— 非三角形， b —— 等边三角形，c —— 等腰三角形，d —— 一般三角形

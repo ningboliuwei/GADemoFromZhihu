@@ -39,36 +39,36 @@ namespace GADemoFromZhihu
 
             for (var i = 0; i < ChromosomeQuantity; i++)
             {
-                var chromosome = new Chromosome {Population = this};
+                var chromosome = new Chromosome { Population = this };
 
                 #region 暂时废弃 
 
                 //先随机生成 N 个片段，再合并
-                //                for (var j = 0; j < SubValueQuantity; j++)
-                //                {
-                //                    //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
-                //                    var segment = 0;
-                //                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / SubValueQuantity);
-                //
-                //                    //生成其中的
-                //                    for (var k = 0; k < singleChromosomeLength; k++)
-                //                        segment += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
-                //
-                //                    chromosome.Value += segment << ((SubValueQuantity - j - 1) * singleChromosomeLength);
-                //                }
+                for (var j = 0; j < SubValueQuantity; j++)
+                {
+                    //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
+                    var segment = 0;
+                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / SubValueQuantity);
+
+                    //生成其中的
+                    for (var k = 0; k < singleChromosomeLength; k++)
+                        segment += Convert.ToInt32(1 << k) * Convert.ToInt32(rnd.Next(0, 2));
+
+                    chromosome.Value += segment << ((SubValueQuantity - j - 1) * singleChromosomeLength);
+                }
 
                 #endregion
 
                 //随机生成 ChromosomeLength 个 0 或 1，并拼接起来
-                for (var k = 0; k < ChromosomeLength; k++)
-                    chromosome.Value += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
+                //                for (var k = 0; k < ChromosomeLength; k++)
+                //                    chromosome.Value += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
 
                 Chromosomes.Add(chromosome);
             }
         }
 
-        //返回一个选择后的种群
-        public Population Select()
+        //返回一个选择后的种群（精英选择法）
+        public Population EliteSelect()
         {
             var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitness).ToList();
 
@@ -94,7 +94,7 @@ namespace GADemoFromZhihu
 
             //所有染色体的选择概率
             var selectionRateList = (from c in sortedChromosomes
-                select c.Fitness / totalFitnetss).ToList();
+                                     select c.Fitness / totalFitnetss).ToList();
             //所有染色体的累积选择概率
             var sumedSelectionRateList = new List<double>();
 
@@ -135,7 +135,7 @@ namespace GADemoFromZhihu
 
                 if (father != mother)
                 {
-                    //交叉点索引，孩子取父亲交叉点之前（不含交叉点，即 crossPos 个）及母亲交叉点之后（含交叉点）的基因
+                    //交叉点索引，孩子取父亲交叉点之前（不含交叉点，即 crossPos）及母亲交叉点之后（含交叉点）的基因
                     var crossPos = rnd.Next(1, ChromosomeLength);
                     var span = ChromosomeLength - crossPos;
 
@@ -150,7 +150,7 @@ namespace GADemoFromZhihu
 
                     var childValue = (father.Value & fatherMask) | (mother.Value & motherMask);
 
-                    children.Add(new Chromosome {Population = this, Value = childValue});
+                    children.Add(new Chromosome { Population = this, Value = childValue });
                 }
             }
 
@@ -209,7 +209,7 @@ namespace GADemoFromZhihu
         public void Envolve()
         {
             //精英选择
-//            var parents = Select();
+            //            var parents = EliteSelect();
             //轮盘赌选择
             var parents = RouletteSelect();
             //crossover 得到子女种群

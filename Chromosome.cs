@@ -38,11 +38,10 @@ namespace GADemoFromZhihu
             get
             {
                 //更换测试函数，就改这里
-//                TestFunction.SetBound(0, 9);
-//                return TestFunction.Function2(GetDecodedValue(Value));
+                int x = (int) GetDecodedValue(SubValues[0]);
+                int y = (int) GetDecodedValue(SubValues[1]);
 
-                TestFunction.SetBound(0,10000);
-                return TestFunction.StubbedBranchTest1(Convert.ToInt32(GetDecodedValue(Value)));
+                return TestFunction.StubbedBranchTest1(x, y);
             }
 
             private set { }
@@ -52,7 +51,7 @@ namespace GADemoFromZhihu
         public double GetDecodedValue(double value)
         {
             return TestFunction.LowerBound + value * (TestFunction.UpperBound - TestFunction.LowerBound) /
-                   (Math.Pow(2, Population.ChromosomeLength) - 1);
+                   (Math.Pow(2,Convert.ToInt32(Population.ChromosomeLength / Population.SubValueQuantity)) - 1);
         }
     }
 }

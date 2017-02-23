@@ -9,11 +9,22 @@ namespace GADemoFromZhihu
     class OutputHelper
     {
 
-        public  static string DisplayChromosomeInfo(Chromosome chromosome)
+        public  static string DisplayChromosomeBinaryValue(Chromosome chromosome)
         {
             return Convert.ToString(chromosome.Value, 2)
-                       .PadLeft(chromosome.Population.ChromosomeLength, '0')
-                       .PadRight(20) + chromosome.GetDecodedValue(chromosome.Value);
+                       .PadLeft(chromosome.Population.ChromosomeLength, '0');
+        }
+
+        public static string DisplayChromosomeSubValues(Chromosome chromosome)
+        {
+            string s = "";
+
+            foreach (var value in chromosome.SubValues)
+            {
+                s += value.ToString() + " ";
+            }
+
+            return s;
         }
     }
 }
