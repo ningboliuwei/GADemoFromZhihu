@@ -7,9 +7,9 @@ namespace GADemoFromZhihu
     internal static class Program
     {
         //染色体数量
-        private const int ChromosomeQuantity = 300;
+        private const int ChromosomeQuantity = 2000;
         //染色体长度
-        private const int ChromosomeLength = 30;
+        private const int ChromosomeLength = 20;
         //存活率
         private const double RetainRate = 0.2;
         //变异率
@@ -66,7 +66,6 @@ namespace GADemoFromZhihu
 
             #region 针对于一代中所有染色体的测试
 
-
             //                foreach (var c in population.Chromosomes)
             //                {
             //                    builder.Clear();
@@ -94,17 +93,18 @@ namespace GADemoFromZhihu
 
             for (var i = 0; i < GenerationQuantity; i++)
             {
-                population.Envolve();
+                //进化过程中不同的选择策略
+                population.Envolve(Population.SelectType.Roulette);
 
                 //找出拥有每一代最高 Fitnetss 值的那个实际的解
                 var maxFitness = population.Chromosomes.Max(n => n.Fitness);
 
                 var mostFittest = (from c in population.Chromosomes
-                                   where Equals(c.Fitness, maxFitness)
-                                   select c).First();
+                    where Equals(c.Fitness, maxFitness)
+                    select c).First();
 
-                int x = (int)mostFittest.GetDecodedValue(mostFittest.SubValues[0]);
-                int y = (int)mostFittest.GetDecodedValue(mostFittest.SubValues[1]);
+                var x = mostFittest.GetDecodedValue(mostFittest.SubValues[0]);
+                var y = mostFittest.GetDecodedValue(mostFittest.SubValues[1]);
 
                 builder.Clear();
                 builder.Append($"after {i + 1:000} envolve(s): ");
@@ -114,9 +114,7 @@ namespace GADemoFromZhihu
                 //所有映射到解空间的值（若有级联）
 
                 foreach (var subValue in mostFittest.SubValues)
-                {
                     builder.Append(mostFittest.GetDecodedValue(subValue)).Append(" ");
-                }
 
 
                 builder.Append(TestFunction.BranchTest1(x, y));
@@ -125,8 +123,6 @@ namespace GADemoFromZhihu
             }
 
             #endregion
-
-
 
             Console.ReadKey();
         }

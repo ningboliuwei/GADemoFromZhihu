@@ -6,6 +6,12 @@ namespace GADemoFromZhihu
 {
     public class Population
     {
+        public enum SelectType
+        {
+            Elite,
+            Roulette
+        };
+
         public Population(double retainRate, double selectionRate, double mutationRate, int chromosomeLength,
             int chromosomeQuantity, int subValueQuantity)
         {
@@ -89,12 +95,12 @@ namespace GADemoFromZhihu
         private Population RouletteSelect()
         {
             var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitness).ToList();
-            var totalFitnetss = sortedChromosomes.Sum(c => c.Fitness);
+            var totalFitness = sortedChromosomes.Sum(c => c.Fitness);
             var selectedChromosomes = new List<Chromosome>();
 
             //所有染色体的选择概率
             var selectionRateList = (from c in sortedChromosomes
-                                     select c.Fitness / totalFitnetss).ToList();
+                                     select c.Fitness / totalFitness).ToList();
             //所有染色体的累积选择概率
             var sumedSelectionRateList = new List<double>();
 
@@ -206,12 +212,21 @@ namespace GADemoFromZhihu
         }
 
         //当前种群进化
-        public void Envolve()
+        public void Envolve(SelectType selectType)
         {
-            //精英选择
-            //            var parents = EliteSelect();
-            //轮盘赌选择
-            var parents = RouletteSelect();
+            Population parents = null;
+
+            if (selectType == SelectType.Elite)
+            {
+                //精英选择
+                parents = EliteSelect();
+            }
+            else if(selectType == SelectType.Roulette)
+            {
+                //轮盘赌选择
+                parents = RouletteSelect();
+            }
+           
             //crossover 得到子女种群
             var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
             Chromosomes.Clear();

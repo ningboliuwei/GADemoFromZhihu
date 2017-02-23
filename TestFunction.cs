@@ -7,7 +7,7 @@ namespace GADemoFromZhihu
         //解空间的下界
         public static double LowerBound = 0;
         //解空间的上界
-        public static double UpperBound = 0;
+        public static double UpperBound = double.MaxValue;
 
 
         public static void SetBound(double lowerBound, double upperBound)
@@ -29,11 +29,11 @@ namespace GADemoFromZhihu
         }
 
         //简单分支函数
-        public static string BranchTest1(int x, int y)
+        public static string BranchTest1(double x, double y)
         {
             var path = "#";
 
-            if (x >= 1000)
+            if (x >= 9980)
             {
                 path += "a";
                 if (y < 50)
@@ -46,23 +46,23 @@ namespace GADemoFromZhihu
         }
 
         //简单分支函数（插桩，用于计算适应度）
-        public static double StubbedBranchTest1(int x, int y)
+        public static double StubbedBranchTest1(double x, double y)
         {
-            var f1 = 0;
-            var f2 = 0;
+            var f1 = 0.0;
+            var f2 = 0.0;
             const int k = 1;
             //
-            if (1000 - x <= 0)
+            if (9980 - x <= 0)
             {
                 f1 = 0;
             }
             else
             {
-                f1 = Math.Abs(1000 - x) + k;
+                f1 = Math.Abs(9980 - x) + k;
             }
             //
 
-            if (x > 1000)
+            if (x > 9980)
             {
                 if (y - 50 < 0)
                 {

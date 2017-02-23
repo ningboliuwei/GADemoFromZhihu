@@ -38,8 +38,8 @@ namespace GADemoFromZhihu
             get
             {
                 //更换测试函数，就改这里
-                int x = (int) GetDecodedValue(SubValues[0]);
-                int y = (int) GetDecodedValue(SubValues[1]);
+                var x = GetDecodedValue(SubValues[0]);
+                var y = GetDecodedValue(SubValues[1]);
 
                 return TestFunction.StubbedBranchTest1(x, y);
             }
