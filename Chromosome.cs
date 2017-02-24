@@ -38,20 +38,19 @@ namespace GADemoFromZhihu
             get
             {
                 //更换测试函数，就改这里
-                var x = GetDecodedValue(SubValues[0]);
-                var y = GetDecodedValue(SubValues[1]);
+                var x = (int)GetDecodedValue(SubValues[0]);
+                var y = (int)GetDecodedValue(SubValues[1]);
+                var z = (int)GetDecodedValue(SubValues[2]);
 
-                return TestFunction.StubbedBranchTest1(x, y);
+                return TestFunction.StubbedTriangleTypeTest(x, y, z);
             }
-
-            private set { }
         }
 
         //得到将染色体值转换为在解空间对应的值
         public double GetDecodedValue(double value)
         {
             return TestFunction.LowerBound + value * (TestFunction.UpperBound - TestFunction.LowerBound) /
-                   (Math.Pow(2,Convert.ToInt32(Population.ChromosomeLength / Population.SubValueQuantity)) - 1);
+                   (Math.Pow(2, Convert.ToInt32(Population.ChromosomeLength / Population.SubValueQuantity)) - 1);
         }
     }
 }

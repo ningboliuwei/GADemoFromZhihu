@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GADemoFromZhihu
 {
     public class TestFunction
     {
         //解空间的下界
-        public static double LowerBound = 0;
+        public static double LowerBound;
         //解空间的上界
-        public static double UpperBound = double.MaxValue;
+        public static double UpperBound;
 
 
         public static void SetBound(double lowerBound, double upperBound)
@@ -37,9 +39,7 @@ namespace GADemoFromZhihu
             {
                 path += "a";
                 if (y < 50)
-                {
                     path += "b";
-                }
             }
 
             return path;
@@ -53,70 +53,85 @@ namespace GADemoFromZhihu
             const int k = 1;
             //
             if (9980 - x <= 0)
-            {
                 f1 = 0;
-            }
             else
-            {
                 f1 = Math.Abs(9980 - x) + k;
-            }
             //
 
             if (x > 9980)
-            {
                 if (y - 50 < 0)
-                {
                     f2 = 0;
+                else
+                    f2 = Math.Abs(50 - y) + k;
+
+            return -(f1 + f2);
+        }
+
+        //equilateral —— 等边， isosceles 等腰，scalene 一般
+        public static string TriangleTypeTest(int x, int y, int z)
+        {
+            var type = "";
+
+            if (x + y > z && x + z > y && y + z > x)
+                if (x == y && y == z)
+                {
+                    type = "equilateral triangle";
                 }
                 else
                 {
-                    f2 = Math.Abs(50 - y) + k;
+                    if (x == y || y == z || x == z)
+                        type = "isosceles triangle";
+                    else
+                        type = "scalene triangle";
                 }
-            }
-
-            return - (f1 + f2);
-        }
-
-        //a —— 非三角形， b —— 等边三角形，c —— 等腰三角形，d —— 一般三角形
-        public static string TriangleTypeTest(int x, int y, int z)
-        {
-            string type = "";
-
-            //            if (x + y <= z || x + z <= y || y + z <= x)
-            //                type = "a";
-            //            else if (x == y && y == z)
-            //                type = "b";
-            //            else if (x == y || y == z || x == z)
-            //                type = "c";
-            //            else
-            //                type = "d";
-            //
-            //            if (x + y > z && x + z > y && y + z > x)
-            //            {
-            //                if (x == y)
-            //                {
-            //                    if (y == z)
-            //                    {
-            //                        type = "b";
-            //                    }
-            //                    else
-            //                    {
-            //                        
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                   
-            //                }
-            //            }
-            //            else
-            //            {
-            //                type= "a";
-            //            }
-            //
-
+            else
+                type = "not a triangle";
 
             return type;
+        }
+
+        public static double StubbedTriangleTypeTest(int x, int y, int z)
+        {
+            var f1 = 0;
+            var f2 = 0;
+            var f3 = 0;
+            var f4 = 0;
+            var f5 = 0;
+            var k = 1;
+
+
+            if (x + y > z && x + z > y && y + z > x)
+            {
+                f1 = 0;
+
+                if (x == y && y == z)
+                {
+                    f2 = 0;
+                    //                    type = "equilateral triangle";
+                }
+                else
+                {
+                    //这里真的是 MAX 吗？
+                    f2 = new List<int> {Math.Abs(x - y), Math.Abs(y - z)}.Max();
+
+                    if (x == y || y == z || x == z)
+                    {
+                        f3 = 0;
+                        //                        type = "isosceles triangle";
+                    }
+                    else
+                    {
+                        f3 = new List<int> {Math.Abs(x - y), Math.Abs(y - z), Math.Abs(x - z)}.Sum();
+                        //                        type = "scalene triangle";
+                    }
+                }
+            }
+            else
+            {
+                f1 = new List<int> {z - (x + y) + k, y - (x + z) + k, x - (y + z) + k}.Min();
+                //                type = "not a triangle";
+            }
+            return -Math.Abs(f1 + f2 + f3);
         }
     }
 }
