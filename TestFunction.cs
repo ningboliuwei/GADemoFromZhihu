@@ -90,6 +90,43 @@ namespace GADemoFromZhihu
             return type;
         }
 
+        public static string TriangleTypeTestPathCoverage(int x, int y, int z)
+        {
+            var type = "";
+            var path = "";
+
+            if (x + y > z && x + z > y && y + z > x)
+            {
+                path += "a";
+                if (x == y && y == z)
+                {
+                    path += "b";
+                    type = "equilateral triangle";
+                }
+                else
+                {
+                    path += "c";
+                    if (x == y || y == z || x == z)
+                    {
+                        path += "d";
+                        type = "isosceles triangle";
+                    }
+                    else
+                    {
+                        path += "e";
+                        type = "scalene triangle";
+                    }
+                }
+            }
+            else
+            {
+                path += "f";
+                type = "not a triangle";
+            }
+
+            return path;
+        }
+
         public static double StubbedTriangleTypeTest(int x, int y, int z)
         {
             var f1 = 0;
@@ -134,7 +171,7 @@ namespace GADemoFromZhihu
             return -Math.Abs(f1 + f2 + f3);
         }
 
-        public static double StubbedTriangleTypeTest2(int x, int y, int z)
+        public static double StubbedTriangleTypeTestPathCoverage(int x, int y, int z)
         {
             var path = "";
             if (x + y > z && x + z > y && y + z > x)
@@ -167,7 +204,99 @@ namespace GADemoFromZhihu
                 path += "f";
             }
             //                type = "not a triangle";
-            return path.Length / 6;
+            return path.Length / 6.0;
+        }
+
+        //计算下一天的日期
+        public static string NextDate(int year, int month, int day)
+        {
+            bool isLeapYear;
+
+                //大月
+            if (month == 12)
+            {
+                if (day == 31)
+                {
+                    year++;
+                    day = 1;
+                    month = 1;
+                }
+            }
+            else
+            {
+                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10)
+                {
+                    if (day == 31)
+                    {
+                        day = 1;
+                        month++;
+                    }
+                    else
+                    {
+                        day++;
+                    }
+
+                }
+                else
+                {
+                    if (month == 4 || month == 6 || month == 9 || month == 11)
+                    {
+                        if (day == 30)
+                        {
+                            day = 1;
+                            month++;
+                        }
+                        else
+                        {
+                            day++;
+                        }
+                    }
+                    else
+                    {
+                        if (month == 2)
+                        {
+                            var endDay = 0;
+
+                            if (year % 400 == 0)
+                            {
+                                endDay = 29;
+                            }
+                            else
+                            {
+                                if (year % 100 == 0)
+                                {
+                                    endDay = 28;
+                                }
+                                else
+                                {
+                                    if (year % 4 == 0)
+                                    {
+                                        endDay = 29;
+                                    }
+                                    else
+                                    {
+                                        endDay = 28;
+                                    }
+                                }
+                            }
+
+                            if (day == endDay)
+                            {
+                                day = 1;
+                                month++;
+                            }
+                            else
+                            {
+                                day++;
+                            }
+                        }
+                    }
+                }
+            }
+
+           return $"{year}-{month}-{day}";
+
+
         }
     }
 }

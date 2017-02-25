@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace GADemoFromZhihu
@@ -34,7 +35,7 @@ namespace GADemoFromZhihu
 
 
             //指定测试函数的解空间上下界
-            TestFunction.SetBound(1, 1000);
+            TestFunction.SetBound(1, 100);
             //随机生成染色体
             population.RandomGenerateChromosome();
 
@@ -158,13 +159,25 @@ namespace GADemoFromZhihu
 //                }
 
                 builder.Append($"{a},{b},{c} ");
-                builder.Append($"fitness: {TestFunction.StubbedTriangleTypeTest(a, b, c)} ");
+                builder.Append($"fitness: {TestFunction.StubbedTriangleTypeTestPathCoverage(a, b, c)} ");
                 builder.Append($"result: {TestFunction.TriangleTypeTest(a, b, c)} ");
-                Console.WriteLine(builder);
+                builder.Append($"path: {TestFunction.TriangleTypeTestPathCoverage(a, b, c)}");
+//                Console.WriteLine(builder);
 
                 //进化过程中不同的选择策略
                 population.Envolve(Population.SelectType.Hybrid);
 //                Console.ReadKey();
+            }
+
+            for (int i = 0; i < 100; i++)
+            {
+                string s = Console.ReadLine();
+                var year = Convert.ToInt32(s.Split(' ')[0]);
+                var month = Convert.ToInt32(s.Split(' ')[1]);
+                var day = Convert.ToInt32(s.Split(' ')[2]);
+
+               Console.WriteLine(TestFunction.NextDate(year, month, day));
+
             }
 
             #endregion

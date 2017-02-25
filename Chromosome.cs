@@ -13,7 +13,7 @@ namespace GADemoFromZhihu
             get
             {
                 //根据染色体得到级联的多参数的各个参数的值（解码前）
-                var mask = 0;
+//                var mask = 0; 暂时废弃
                 var singleChromosomeLength = Convert.ToInt32(Population.ChromosomeLength / Population.SubValueQuantity);
                 var subValues = new List<int>();
 
@@ -51,7 +51,7 @@ namespace GADemoFromZhihu
                 var y = (int)GetDecodedValue(SubValues[1]);
                 var z = (int)GetDecodedValue(SubValues[2]);
 
-                return TestFunction.StubbedTriangleTypeTest(x, y, z);
+                return TestFunction.StubbedTriangleTypeTestPathCoverage(x, y, z);
             }
         }
 
