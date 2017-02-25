@@ -210,38 +210,29 @@ namespace GADemoFromZhihu
         //计算下一天的日期
         public static string NextDate(int year, int month, int day)
         {
-            bool isLeapYear;
+            var errorMessage = "Invalid date";
 
+            if (year >= 1950 && year < 2050 && month >= 1 && month <= 12 && day >= 1 && day <= 31)
+            {
                 //大月
-            if (month == 12)
-            {
-                if (day == 31)
-                {
-                    year++;
-                    day = 1;
-                    month = 1;
-                }
-            }
-            else
-            {
-                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10)
+                if (month == 12)
                 {
                     if (day == 31)
                     {
+                        year++;
                         day = 1;
-                        month++;
+                        month = 1;
                     }
                     else
                     {
                         day++;
                     }
-
                 }
                 else
                 {
-                    if (month == 4 || month == 6 || month == 9 || month == 11)
+                    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10)
                     {
-                        if (day == 30)
+                        if (day == 31)
                         {
                             day = 1;
                             month++;
@@ -253,34 +244,13 @@ namespace GADemoFromZhihu
                     }
                     else
                     {
-                        if (month == 2)
+                        if (month == 4 || month == 6 || month == 9 || month == 11)
                         {
-                            var endDay = 0;
-
-                            if (year % 400 == 0)
+                            if (day == 31)
                             {
-                                endDay = 29;
+                                return errorMessage;
                             }
-                            else
-                            {
-                                if (year % 100 == 0)
-                                {
-                                    endDay = 28;
-                                }
-                                else
-                                {
-                                    if (year % 4 == 0)
-                                    {
-                                        endDay = 29;
-                                    }
-                                    else
-                                    {
-                                        endDay = 28;
-                                    }
-                                }
-                            }
-
-                            if (day == endDay)
+                            if (day == 30)
                             {
                                 day = 1;
                                 month++;
@@ -290,13 +260,55 @@ namespace GADemoFromZhihu
                                 day++;
                             }
                         }
+                        else
+                        {
+                            if (month == 2)
+                            {
+                                var endDay = 0;
+
+                                if (year % 400 == 0)
+                                {
+                                    endDay = 29;
+                                }
+                                else
+                                {
+                                    if (year % 100 == 0)
+                                    {
+                                        endDay = 28;
+                                    }
+                                    else
+                                    {
+                                        if (year % 4 == 0)
+                                        {
+                                            endDay = 29;
+                                        }
+                                        else
+                                        {
+                                            endDay = 28;
+                                        }
+                                    }
+                                }
+
+                                if (day > endDay)
+                                {
+                                    return errorMessage;
+                                }
+                                if (day == endDay)
+                                {
+                                    day = 1;
+                                    month++;
+                                }
+                                else
+                                {
+                                    day++;
+                                }
+                            }
+                        }
                     }
                 }
+                return $"{year}-{month}-{day}";
             }
-
-           return $"{year}-{month}-{day}";
-
-
+            return errorMessage;
         }
     }
 }
