@@ -54,14 +54,22 @@ namespace GADemoFromZhihu
                 for (var j = 0; j < SubValueQuantity; j++)
                 {
                     //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
-                    var segment = 0;
-                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / SubValueQuantity);
 
-                    //生成其中的
-                    for (var k = 0; k < singleChromosomeLength; k++)
-                        segment += Convert.ToInt32(1 << k) * Convert.ToInt32(rnd.Next(0, 2));
+                    #region 使用位运算的方法，暂时废弃
+//                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / SubValueQuantity);
+                    //                    for (var k = 0; k < singleChromosomeLength; k++)
+                    //                        segment += Convert.ToInt32(1 << k) * Convert.ToInt32(rnd.Next(0, 2));
+                    //                    segment += Convert.ToInt32(valueString, 2);
+                    //                    chromosome.Value += segment << ((SubValueQuantity - j - 1) * singleChromosomeLength);
 
-                    chromosome.Value += segment << ((SubValueQuantity - j - 1) * singleChromosomeLength);
+                    #endregion
+
+                    var valueString = "";
+                    for (var k = 0; k < ChromosomeLength; k++)
+                    {
+                        valueString += Convert.ToInt32(rnd.Next(0, 2)).ToString();
+                    }
+                    chromosome.Value = Convert.ToInt64(valueString, 2);
                 }
 
                 #endregion
@@ -129,6 +137,7 @@ namespace GADemoFromZhihu
             return result;
         }
 
+        //精英与轮盘赌混合选择
         private Population HybridSelect(Population population)
         {
             var sortedChromosomes = population.Chromosomes.OrderByDescending(c => c.Fitness).ToList();

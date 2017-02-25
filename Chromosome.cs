@@ -6,7 +6,7 @@ namespace GADemoFromZhihu
     public class Chromosome
     {
         public Population Population { get; set; }
-        public int Value { get; set; }
+        public long Value { get; set; }
 
         public List<int> SubValues
         {
@@ -17,16 +17,25 @@ namespace GADemoFromZhihu
                 var singleChromosomeLength = Convert.ToInt32(Population.ChromosomeLength / Population.SubValueQuantity);
                 var subValues = new List<int>();
 
-                //生成 singleChromosomeLength 个 1 的掩码
-                for (var i = 0; i < singleChromosomeLength; i++)
-                    mask += 1 << i;
+                var valueBinaryString = Convert.ToString(Value, 2).PadLeft(Population.ChromosomeLength, '0');
+
+                
 
                 //获取每个片段的值
                 for (var i = 0; i < Population.SubValueQuantity; i++)
                 {
-                    var space = (Population.SubValueQuantity - i - 1) * singleChromosomeLength;
-                    var subValue = (Value & (mask << space)) >> space;
-                    subValues.Add(subValue);
+                    #region 位运算的方法，超出范围，废弃
+                    //生成 singleChromosomeLength 个 1 的掩码
+                    //                for (var i = 0; i < singleChromosomeLength; i++)
+                    //                    mask += 1 << i;
+                    //                    var space = (Population.SubValueQuantity - i - 1) * singleChromosomeLength;
+                    //                    var subValue = (Value & (mask << space)) >> space;
+                    #endregion
+
+                    var currentSubValueBinaryString = valueBinaryString.Substring(singleChromosomeLength * (i),
+                        singleChromosomeLength);
+                    
+                    subValues.Add(Convert.ToInt32(currentSubValueBinaryString,2));
                 }
 
                 return subValues;

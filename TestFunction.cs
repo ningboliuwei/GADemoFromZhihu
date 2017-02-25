@@ -133,5 +133,41 @@ namespace GADemoFromZhihu
             }
             return -Math.Abs(f1 + f2 + f3);
         }
+
+        public static double StubbedTriangleTypeTest2(int x, int y, int z)
+        {
+            var path = "";
+            if (x + y > z && x + z > y && y + z > x)
+            {
+                path += "a";
+                if (x == y && y == z)
+                {
+                    path += "b";
+                    //                    type = "equilateral triangle";
+                }
+                else
+                {
+                    path += "c";
+                    //这里真的是 MAX 吗？
+
+                    if (x == y || y == z || x == z)
+                    {
+                        path += "d";
+                        //                        type = "isosceles triangle";
+                    }
+                    else
+                    {
+                        path += "e";
+                        //                        type = "scalene triangle";
+                    }
+                }
+            }
+            else
+            {
+                path += "f";
+            }
+            //                type = "not a triangle";
+            return path.Length / 6;
+        }
     }
 }

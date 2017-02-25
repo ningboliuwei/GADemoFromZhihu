@@ -7,7 +7,7 @@ namespace GADemoFromZhihu
     internal static class Program
     {
         //染色体数量
-        private const int ChromosomeQuantity = 3000;
+        private const int ChromosomeQuantity = 100;
         //染色体长度
         private const int ChromosomeLength = 33;
         //存活率
@@ -121,9 +121,9 @@ namespace GADemoFromZhihu
 //                        builder.Append($"{d.GetDecodedValue(value)} ");
 //                    }
 
-                    var x = (int) d.GetDecodedValue(d.SubValues[0]);
-                    var y = (int) d.GetDecodedValue(d.SubValues[1]);
-                    var z = (int) d.GetDecodedValue(d.SubValues[2]);
+                    var x = Convert.ToInt32(d.GetDecodedValue(d.SubValues[0]));
+                    var y = Convert.ToInt32(d.GetDecodedValue(d.SubValues[1]));
+                    var z = Convert.ToInt32(d.GetDecodedValue(d.SubValues[2]));
 
                     builder.Append($"{x}, {y}, {z} ");
                     builder.Append(TestFunction.TriangleTypeTest(x, y, z));
@@ -141,9 +141,9 @@ namespace GADemoFromZhihu
                     where Equals(e.Fitness, maxFitness)
                     select e).First();
 
-                var a = (int) mostFittest.GetDecodedValue(mostFittest.SubValues[0]);
-                var b = (int) mostFittest.GetDecodedValue(mostFittest.SubValues[1]);
-                var c = (int) mostFittest.GetDecodedValue(mostFittest.SubValues[2]);
+                var a = Convert.ToInt32(mostFittest.GetDecodedValue(mostFittest.SubValues[0]));
+                var b = Convert.ToInt32(mostFittest.GetDecodedValue(mostFittest.SubValues[1]));
+                var c = Convert.ToInt32(mostFittest.GetDecodedValue(mostFittest.SubValues[2]));
 
                 builder.Clear();
                 builder.Append($"after {i + 1:000} envolve(s): ");
@@ -163,7 +163,7 @@ namespace GADemoFromZhihu
                 Console.WriteLine(builder);
 
                 //进化过程中不同的选择策略
-                population.Envolve(Population.SelectType.Roulette);
+                population.Envolve(Population.SelectType.Hybrid);
 //                Console.ReadKey();
             }
 
