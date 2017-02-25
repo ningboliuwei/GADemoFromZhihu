@@ -9,8 +9,9 @@ namespace GADemoFromZhihu
         public enum SelectType
         {
             Elite,
-            Roulette
-        };
+            Roulette,
+            Hybrid
+        }
 
         public Population(double retainRate, double selectionRate, double mutationRate, int chromosomeLength,
             int chromosomeQuantity, int subValueQuantity)
@@ -45,7 +46,7 @@ namespace GADemoFromZhihu
 
             for (var i = 0; i < ChromosomeQuantity; i++)
             {
-                var chromosome = new Chromosome { Population = this };
+                var chromosome = new Chromosome {Population = this};
 
                 #region 暂时废弃 
 
@@ -74,9 +75,9 @@ namespace GADemoFromZhihu
         }
 
         //返回一个选择后的种群（精英选择法）
-        public Population EliteSelect()
+        public Population EliteSelect(Population population)
         {
-            var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitness).ToList();
+            var sortedChromosomes = population.Chromosomes.OrderByDescending(c => c.Fitness).ToList();
 
             var retainQuantity = Convert.ToInt32(sortedChromosomes.Count * RetainRate);
             var selectedChromosomes = sortedChromosomes.Take(retainQuantity).ToList();
@@ -92,15 +93,15 @@ namespace GADemoFromZhihu
         }
 
         //轮盘赌选择法
-        private Population RouletteSelect()
+        private Population RouletteSelect(Population population)
         {
-            var sortedChromosomes = Chromosomes.OrderByDescending(c => c.Fitness).ToList();
+            var sortedChromosomes = population.Chromosomes.OrderByDescending(c => c.Fitness).ToList();
             var totalFitness = sortedChromosomes.Sum(c => c.Fitness);
             var selectedChromosomes = new List<Chromosome>();
 
             //所有染色体的选择概率
             var selectionRateList = (from c in sortedChromosomes
-                                     select c.Fitness / totalFitness).ToList();
+                select c.Fitness / totalFitness).ToList();
             //所有染色体的累积选择概率
             var sumedSelectionRateList = new List<double>();
 
@@ -127,6 +128,24 @@ namespace GADemoFromZhihu
             result.Chromosomes = selectedChromosomes;
             return result;
         }
+
+        private Population HybridSelect(Population population)
+        {
+            var sortedChromosomes = population.Chromosomes.OrderByDescending(c => c.Fitness).ToList();
+            var retainQuantity = Convert.ToInt32(sortedChromosomes.Count * RetainRate);
+
+            var elitePopulation = Clone();
+            elitePopulation.Chromosomes = sortedChromosomes.Take(retainQuantity).ToList();
+
+            var roulettePopulation = Clone();
+            roulettePopulation.Chromosomes = sortedChromosomes.Skip(retainQuantity).ToList();
+
+            var selectedPopulation = RouletteSelect(roulettePopulation);
+            elitePopulation.Chromosomes.AddRange(selectedPopulation.Chromosomes);
+
+            return elitePopulation;
+        }
+
 
         //返回由当前种群进行 crossover 后所得到的孩子集合
         public Population Crossover(int childQuantity)
@@ -156,7 +175,7 @@ namespace GADemoFromZhihu
 
                     var childValue = (father.Value & fatherMask) | (mother.Value & motherMask);
 
-                    children.Add(new Chromosome { Population = this, Value = childValue });
+                    children.Add(new Chromosome {Population = this, Value = childValue});
                 }
             }
 
@@ -219,14 +238,19 @@ namespace GADemoFromZhihu
             if (selectType == SelectType.Elite)
             {
                 //精英选择
-                parents = EliteSelect();
+                parents = EliteSelect(this);
             }
-            else if(selectType == SelectType.Roulette)
+            else if (selectType == SelectType.Roulette)
             {
                 //轮盘赌选择
-                parents = RouletteSelect();
+                parents = RouletteSelect(this);
             }
-           
+            else if (selectType == SelectType.Hybrid)
+            {
+                //精英与轮盘赌混合选择
+                parents = HybridSelect(this);
+            }
+
             //crossover 得到子女种群
             var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
             Chromosomes.Clear();

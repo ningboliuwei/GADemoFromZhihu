@@ -112,7 +112,7 @@ namespace GADemoFromZhihu
                 else
                 {
                     //这里真的是 MAX 吗？
-                    f2 = new List<int> {Math.Abs(x - y), Math.Abs(y - z)}.Max();
+                    f2 = new List<int> {Math.Abs(x - y), Math.Abs(y - z)}.Sum();
 
                     if (x == y || y == z || x == z)
                     {
@@ -121,7 +121,7 @@ namespace GADemoFromZhihu
                     }
                     else
                     {
-                        f3 = new List<int> {Math.Abs(x - y), Math.Abs(y - z), Math.Abs(x - z)}.Sum();
+                        f3 = new List<int> {Math.Abs(x - y), Math.Abs(y - z), Math.Abs(x - z)}.Min();
                         //                        type = "scalene triangle";
                     }
                 }

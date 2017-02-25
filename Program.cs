@@ -7,9 +7,9 @@ namespace GADemoFromZhihu
     internal static class Program
     {
         //染色体数量
-        private const int ChromosomeQuantity = 300;
+        private const int ChromosomeQuantity = 3000;
         //染色体长度
-        private const int ChromosomeLength = 30;
+        private const int ChromosomeLength = 33;
         //存活率
         private const double RetainRate = 0.2;
         //变异率
@@ -19,7 +19,7 @@ namespace GADemoFromZhihu
         //精确度
         private const double Precision = 0.00000000000001;
         //进化代数
-        private const int GenerationQuantity = 20;
+        private const int GenerationQuantity = 200;
 
         private const int SubValueQuantity = 3;
 
@@ -34,7 +34,7 @@ namespace GADemoFromZhihu
 
 
             //指定测试函数的解空间上下界
-            TestFunction.SetBound(0, 10);
+            TestFunction.SetBound(1, 1000);
             //随机生成染色体
             population.RandomGenerateChromosome();
 
@@ -116,10 +116,10 @@ namespace GADemoFromZhihu
 //                    builder.Append($"{OutputHelper.DisplayChromosomeBinaryValue(d)} ");
 
 //                            所有映射到解空间的值（若有级联）
-                    foreach (var value in d.SubValues)
-                    {
-                        builder.Append($"{d.GetDecodedValue(value)} ");
-                    }
+//                    foreach (var value in d.SubValues)
+//                    {
+//                        builder.Append($"{d.GetDecodedValue(value)} ");
+//                    }
 
                     var x = (int) d.GetDecodedValue(d.SubValues[0]);
                     var y = (int) d.GetDecodedValue(d.SubValues[1]);
@@ -130,7 +130,7 @@ namespace GADemoFromZhihu
                     builder.Append(" | ");
                     builder.Append(TestFunction.StubbedTriangleTypeTest(x, y, z));
 
-                    Console.WriteLine(builder);
+//                    Console.WriteLine(builder);
                 }
 
 
@@ -163,8 +163,8 @@ namespace GADemoFromZhihu
                 Console.WriteLine(builder);
 
                 //进化过程中不同的选择策略
-                population.Envolve(Population.SelectType.Elite);
-                Console.ReadKey();
+                population.Envolve(Population.SelectType.Roulette);
+//                Console.ReadKey();
             }
 
             #endregion
