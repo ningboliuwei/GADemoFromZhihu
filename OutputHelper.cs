@@ -8,11 +8,10 @@ namespace GADemoFromZhihu
 {
     class OutputHelper
     {
-
-        public  static string DisplayChromosomeBinaryValue(Chromosome chromosome)
+        public static string DisplayChromosomeBinaryValue(Chromosome chromosome)
         {
             return Convert.ToString(chromosome.Value, 2)
-                       .PadLeft(chromosome.Population.ChromosomeLength, '0');
+                .PadLeft(chromosome.Population.ChromosomeLength, '0');
         }
 
         public static string DisplayChromosomeSubValues(Chromosome chromosome)
@@ -21,7 +20,7 @@ namespace GADemoFromZhihu
 
             foreach (var value in chromosome.SubValues)
             {
-                s += value.ToString() + " ";
+                s += value + " ";
             }
 
             return s;

@@ -6,3 +6,4 @@ C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.exe
 C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.pdb
 C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\bin\Debug\GADemoFromZhihu.exe.config
 C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.csprojResolveAssemblyReference.cache
+C:\GitHub\GADemoFromZhihu\GADemoFromZhihu\obj\Debug\GADemoFromZhihu.csproj.CoreCompileInputs.cache

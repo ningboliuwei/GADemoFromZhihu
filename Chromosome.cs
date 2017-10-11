@@ -19,23 +19,24 @@ namespace GADemoFromZhihu
 
                 var valueBinaryString = Convert.ToString(Value, 2).PadLeft(Population.ChromosomeLength, '0');
 
-                
 
                 //获取每个片段的值
                 for (var i = 0; i < Population.SubValueQuantity; i++)
                 {
                     #region 位运算的方法，超出范围，废弃
+
                     //生成 singleChromosomeLength 个 1 的掩码
                     //                for (var i = 0; i < singleChromosomeLength; i++)
                     //                    mask += 1 << i;
                     //                    var space = (Population.SubValueQuantity - i - 1) * singleChromosomeLength;
                     //                    var subValue = (Value & (mask << space)) >> space;
+
                     #endregion
 
-                    var currentSubValueBinaryString = valueBinaryString.Substring(singleChromosomeLength * (i),
+                    var currentSubValueBinaryString = valueBinaryString.Substring(singleChromosomeLength * i,
                         singleChromosomeLength);
-                    
-                    subValues.Add(Convert.ToInt32(currentSubValueBinaryString,2));
+
+                    subValues.Add(Convert.ToInt32(currentSubValueBinaryString, 2));
                 }
 
                 return subValues;
@@ -47,9 +48,9 @@ namespace GADemoFromZhihu
             get
             {
                 //更换测试函数，就改这里
-                var x = (int)GetDecodedValue(SubValues[0]);
-                var y = (int)GetDecodedValue(SubValues[1]);
-                var z = (int)GetDecodedValue(SubValues[2]);
+                var x = (int) GetDecodedValue(SubValues[0]);
+                var y = (int) GetDecodedValue(SubValues[1]);
+                var z = (int) GetDecodedValue(SubValues[2]);
 
                 return TestFunction.StubbedTriangleTypeTestPathCoverage(x, y, z);
             }

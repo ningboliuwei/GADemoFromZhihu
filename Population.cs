@@ -26,16 +26,22 @@ namespace GADemoFromZhihu
 
         //染色体集合
         public List<Chromosome> Chromosomes { get; private set; } = new List<Chromosome>();
+
         //（需要的）染色体个数
         public int ChromosomeQuantity { get; set; }
+
         //存活率
         public double RetainRate { get; set; }
+
         //（随机）选择率
         public double SelectionRate { get; set; }
+
         //变异率
         public double MutationRate { get; set; }
+
         //子值数量（多参数级联情况下）
         public int SubValueQuantity { get; }
+
         //染色体长度（总长度）
         public int ChromosomeLength { get; }
 
@@ -56,6 +62,7 @@ namespace GADemoFromZhihu
                     //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
 
                     #region 使用位运算的方法，暂时废弃
+
 //                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / SubValueQuantity);
                     //                    for (var k = 0; k < singleChromosomeLength; k++)
                     //                        segment += Convert.ToInt32(1 << k) * Convert.ToInt32(rnd.Next(0, 2));
@@ -91,7 +98,7 @@ namespace GADemoFromZhihu
             var selectedChromosomes = sortedChromosomes.Take(retainQuantity).ToList();
 
             var rnd = new Random();
-            for (var i = retainQuantity; i < sortedChromosomes.Count(); i++)
+            for (var i = retainQuantity; i < sortedChromosomes.Count; i++)
                 if (rnd.NextDouble() < SelectionRate)
                     selectedChromosomes.Add(sortedChromosomes[i]);
 
@@ -211,9 +218,7 @@ namespace GADemoFromZhihu
         //返回一个与当前种群参数相同，但不包含任何染色体实例的种群（即返回具有相同参数的空种群）
         public Population Clone()
         {
-            var copy = MemberwiseClone() as Population;
-
-            if (copy != null)
+            if (MemberwiseClone() is Population copy)
             {
                 copy.Chromosomes = new List<Chromosome>();
 
@@ -225,9 +230,7 @@ namespace GADemoFromZhihu
         //返回一个与当前种群参数相同，且具有完全一样的染色体集合的种群
         public Population Copy()
         {
-            var copy = MemberwiseClone() as Population;
-
-            if (copy != null)
+            if (MemberwiseClone() is Population copy)
             {
                 copy.Chromosomes = new List<Chromosome>();
                 foreach (var c in Chromosomes)
@@ -261,11 +264,14 @@ namespace GADemoFromZhihu
             }
 
             //crossover 得到子女种群
-            var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
-            Chromosomes.Clear();
-            //将选择出来的所有父母染色体，及他们 crossover 得到的子女，作为新的种群
-            Chromosomes.AddRange(parents.Chromosomes);
-            Chromosomes.AddRange(children.Chromosomes);
+            if (parents != null)
+            {
+                var children = Crossover(Chromosomes.Count - parents.Chromosomes.Count);
+                Chromosomes.Clear();
+                //将选择出来的所有父母染色体，及他们 crossover 得到的子女，作为新的种群
+                Chromosomes.AddRange(parents.Chromosomes);
+                Chromosomes.AddRange(children.Chromosomes);
+            }
             //变异
             Mutate();
         }

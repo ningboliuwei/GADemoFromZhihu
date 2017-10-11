@@ -8,6 +8,7 @@ namespace GADemoFromZhihu
     {
         //解空间的下界
         public static double LowerBound;
+
         //解空间的上界
         public static double UpperBound;
 
@@ -214,6 +215,127 @@ namespace GADemoFromZhihu
 
             if (year >= 1950 && year < 2050 && month >= 1 && month <= 12 && day >= 1 && day <= 31)
             {
+                //大月
+                if (month == 12)
+                {
+                    if (day == 31)
+                    {
+                        year++;
+                        day = 1;
+                        month = 1;
+                    }
+                    else
+                    {
+                        day++;
+                    }
+                }
+                else
+                {
+                    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10)
+                    {
+                        if (day == 31)
+                        {
+                            day = 1;
+                            month++;
+                        }
+                        else
+                        {
+                            day++;
+                        }
+                    }
+                    else
+                    {
+                        if (month == 4 || month == 6 || month == 9 || month == 11)
+                        {
+                            if (day == 31)
+                            {
+                                return errorMessage;
+                            }
+                            if (day == 30)
+                            {
+                                day = 1;
+                                month++;
+                            }
+                            else
+                            {
+                                day++;
+                            }
+                        }
+                        else
+                        {
+                            if (month == 2)
+                            {
+                                var endDay = 0;
+
+                                if (year % 400 == 0)
+                                {
+                                    endDay = 29;
+                                }
+                                else
+                                {
+                                    if (year % 100 == 0)
+                                    {
+                                        endDay = 28;
+                                    }
+                                    else
+                                    {
+                                        if (year % 4 == 0)
+                                        {
+                                            endDay = 29;
+                                        }
+                                        else
+                                        {
+                                            endDay = 28;
+                                        }
+                                    }
+                                }
+
+                                if (day > endDay)
+                                {
+                                    return errorMessage;
+                                }
+                                if (day == endDay)
+                                {
+                                    day = 1;
+                                    month++;
+                                }
+                                else
+                                {
+                                    day++;
+                                }
+                            }
+                        }
+                    }
+                }
+                return $"{year}-{month}-{day}";
+            }
+            return errorMessage;
+        }
+
+        public static string StubbedNextDate(int year, int month, int day)
+        {
+            var f1 = 0;
+            var f2 = 0;
+            var f3 = 0;
+            var f4 = 0;
+            var f5 = 0;
+            var f6 = 0;
+            var f7 = 0;
+            var f8 = 0;
+            var f9 = 0;
+            var f10 = 0;
+            var f11 = 0;
+            var f12 = 0;
+            var f13 = 0;
+            var f14 = 0;
+            var f15 = 0;
+            var f16 = 0;
+
+            var errorMessage = "Invalid date";
+
+            if (year >= 1950 && year < 2050 && month >= 1 && month <= 12 && day >= 1 && day <= 31)
+            {
+                f1 = 0;
                 //大月
                 if (month == 12)
                 {
