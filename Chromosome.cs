@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GADemoFromZhihu
 {
     public class Chromosome
     {
+       
         public Population Population { get; set; }
 
         public long Value { get; set; }
+
+      
 
         public List<int> SubValues
         {
@@ -36,8 +40,9 @@ namespace GADemoFromZhihu
         {
             get
             {
-                var x = GetDecodedValue(SubValues[0]);
-                return TestFunction.Function2(x);
+                var paras = SubValues.Select(v => GetDecodedValue(v)).ToArray();
+                
+                return Population.FitnessFunction(paras);
             }
         }
 

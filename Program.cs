@@ -7,7 +7,7 @@ namespace GADemoFromZhihu
     internal static class Program
     {
         //染色体数量
-        private const int ChromosomeQuantity = 100;
+        private const int ChromosomeQuantity = 10000;
 
         //染色体长度
         private const int ChromosomeLength = 11;
@@ -27,7 +27,7 @@ namespace GADemoFromZhihu
         //进化代数
         private const int GenerationQuantity = 200;
 
-        private const int SubValueQuantity = 1;
+        private const int SubValueQuantity = 3;
 
         /// <summary>
         ///     应用程序的主入口点。
@@ -35,26 +35,26 @@ namespace GADemoFromZhihu
         private static void Main()
         {
             var population = new Population(RetainRate, SelectionRate, MutationRate, ChromosomeLength,
-                ChromosomeQuantity, SubValueQuantity);
+                ChromosomeQuantity, SubValueQuantity, TestFunction.StubbedTriangleTypeTest_B);
             var builder = new StringBuilder();
 
             //指定测试函数的解空间上下界
-            TestFunction.SetBound(0, 9);
+            TestFunction.SetBound(0, 1000);
             //随机生成染色体
             population.RandomGenerateChromosome();
 
             #region 随机生成三角形测试数据
 
-            //            var rnd = new Random();
-            //
-            //            for (int i = 0; i < 1000; i++)
-            //            {
-            //                var x = rnd.Next(1, 10);
-            //                var y = rnd.Next(1, 10);
-            //                var z = rnd.Next(1, 10);
-            //
-            //                Console.WriteLine($"{x},{y},{z} {TestFunction.TriangleTypeTest(x,y,z)}");
-            //            }
+//            var rnd = new Random();
+//            
+//            for (int i = 0; i < 1000; i++)
+//            {
+//                var x = rnd.Next(1, 10);
+//                var y = rnd.Next(1, 10);
+//                var z = rnd.Next(1, 10);
+//            
+//                Console.WriteLine($"{x},{y},{z} {TestFunction.TriangleTypeTest(x,y,z)}");
+//            }
 
             #endregion
 
@@ -115,24 +115,28 @@ namespace GADemoFromZhihu
 //
             for (var i = 0; i < GenerationQuantity; i++)
             {
-//                foreach (var c in population.Chromosomes)
-//                {
-//                    builder.Clear();
-//                    builder.Append($"{OutputHelper.DisplayChromosomeBinaryValue(c)} ");
-//
-//                    //                            所有映射到解空间的值（若有级联）
-//                    //                    foreach (var value in d.SubValues)
-//                    //                    {
-//                    //                        builder.Append($"{d.GetDecodedValue(value)} ");
-//                    //                    }
-//
-//                    var x = c.GetDecodedValue(c.SubValues[0]);
-//                    builder.Append($"{x}");
-//                    builder.Append(" | fitness: ");
-//                    builder.Append(c.Fitness);
-//
-//                    //                    Console.WriteLine(builder);
-//                }
+                #region 显示本代中所有染色体及适应度
+
+                //                foreach (var c in population.Chromosomes)
+                //                {
+                //                    builder.Clear();
+                //                    builder.Append($"{OutputHelper.DisplayChromosomeBinaryValue(c)} ");
+                //
+                //                    //                            所有映射到解空间的值（若有级联）
+                //                    //                    foreach (var value in d.SubValues)
+                //                    //                    {
+                //                    //                        builder.Append($"{d.GetDecodedValue(value)} ");
+                //                    //                    }
+                //
+                //                    var x = c.GetDecodedValue(c.SubValues[0]);
+                //                    builder.Append($"{x}");
+                //                    builder.Append(" | fitness: ");
+                //                    builder.Append(c.Fitness);
+                //
+                //                    //                    Console.WriteLine(builder);
+                //                }
+
+                #endregion
 
                 //找出拥有每一代最高 Fitnetss 值的那个实际的解
                 var maxFitness = population.Chromosomes.Max(n => n.Fitness);
@@ -140,18 +144,19 @@ namespace GADemoFromZhihu
 
                 builder.Clear();
                 builder.Append($"after {i + 1:000} envolve(s): ");
-              
 
                 //所有映射到解空间的值（若有级联）
-                var decodedSubValuesString = string.Join(" ", mostFittest.SubValues.Select(v =>
-                    mostFittest.GetDecodedValue(v).ToString()).ToArray());
+                var decodedSubValues = mostFittest.SubValues.Select(v =>
+                    mostFittest.GetDecodedValue(v)).ToArray();
+                var decodedSubValuesString = string.Join(" ", decodedSubValues);
 
                 //染色体二进制表示 | 所有子值（即多输入参数拼接） | 适应度
                 builder.Append(
                     $"{OutputHelper.DisplayChromosomeBinaryValue(mostFittest)} | {decodedSubValuesString} | fitness: {mostFittest.Fitness}");
                 // builder.Append ($"fitness: {TestFunction.StubbedTriangleTypeTestPathCoverage(a, b, c)} ");
-                // builder.Append ($"result: {TestFunction.TriangleTypeTest(a, b, c)} ");
+                builder.Append($" | result: {TestFunction.TriangleTypeTest(decodedSubValues)} ");
                 // builder.Append ($"path: {TestFunction.TriangleTypeTestPathCoverage(a, b, c)}");
+
                 Console.WriteLine(builder);
 
                 //进化过程中不同的选择策略

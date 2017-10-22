@@ -20,23 +20,28 @@ namespace GADemoFromZhihu
         }
 
         //解空间 [0,1]
-        public static double Function1(double x)
+        public static double Function1(params double[] paras)
         {
+            var x = paras[0];
             return x * Math.Sin(10 * Math.PI * x) + 2.0;
         }
 
-        //解空间 7[0,9]
-        public static double Function2(double x)
+        //解空间 [0,9]
+        public static double Function2(params double[] paras)
         {
+            var x = paras[0];
+            
             return x + 10 * Math.Sin(5 * x) + 7 * Math.Cos(4 * x);
         }
 
         //简单分支函数
-        public static string BranchTest1(double x, double y)
+        public static string BranchTest1(params double[] paras)
         {
             var path = "#";
+            var x = paras[0];
+            var y = paras[1];
 
-            if (x >= 9980)
+            if (x >= 80)
             {
                 path += "a";
                 if (y < 50)
@@ -46,20 +51,39 @@ namespace GADemoFromZhihu
             return path;
         }
 
-        //简单分支函数（插桩，用于计算适应度）
-        public static double StubbedBranchTest1(double x, double y)
+        public static double StubbedBranchTest1_A(params double[] paras)
+        {
+            var path = "#";
+            var x = paras[0];
+            var y = paras[1];
+
+            if (x >= 80)
+            {
+                path += "a";
+                if (y < 50)
+                    path += "b";
+            }
+
+            return path.Length / 3.0;
+        }
+
+        
+        //简单分支函数（插桩，用于计算适应度——面向距离方法的）
+        public static double StubbedBranchTest1_B(params double[] paras)
         {
             var f1 = 0.0;
             var f2 = 0.0;
+            var x = paras[0];
+            var y = paras[1];
             const int k = 1;
             //
-            if (9980 - x <= 0)
+            if (80 - x <= 0)
                 f1 = 0;
             else
-                f1 = Math.Abs(9980 - x) + k;
+                f1 = Math.Abs(80 - x) + k;
             //
 
-            if (x > 9980)
+            if (x > 80)
                 if (y - 50 < 0)
                     f2 = 0;
                 else
@@ -69,9 +93,12 @@ namespace GADemoFromZhihu
         }
 
         //equilateral —— 等边， isosceles 等腰，scalene 一般
-        public static string TriangleTypeTest(int x, int y, int z)
+        public static string TriangleTypeTest(params double[] paras)
         {
             var type = "";
+            var x = (int) paras[0];
+            var y = (int)paras[0];
+            var z = (int)paras[0];
 
             if (x + y > z && x + z > y && y + z > x)
                 if (x == y && y == z)
@@ -91,11 +118,14 @@ namespace GADemoFromZhihu
             return type;
         }
 
-        public static string TriangleTypeTestPathCoverage(int x, int y, int z)
+        public static string TriangleTypeTestPathCoverage(params double[] paras)
         {
             var type = "";
             var path = "";
-
+            var x = (int)paras[0];
+            var y = (int)paras[0];
+            var z = (int)paras[0];
+            
             if (x + y > z && x + z > y && y + z > x)
             {
                 path += "a";
@@ -128,7 +158,7 @@ namespace GADemoFromZhihu
             return path;
         }
 
-        public static double StubbedTriangleTypeTest(int x, int y, int z)
+        public static double StubbedTriangleTypeTest_B(params double[] paras)
         {
             var f1 = 0;
             var f2 = 0;
@@ -136,7 +166,9 @@ namespace GADemoFromZhihu
             var f4 = 0;
             var f5 = 0;
             var k = 1;
-
+            var x = (int)paras[0];
+            var y = (int)paras[0];
+            var z = (int)paras[0];
 
             if (x + y > z && x + z > y && y + z > x)
             {

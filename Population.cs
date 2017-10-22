@@ -6,6 +6,8 @@ namespace GADemoFromZhihu
 {
     public class Population
     {
+        public delegate double FitnessFunctionDelegate(params double[] paras);
+        
         public enum SelectType
         {
             Elite,
@@ -14,7 +16,7 @@ namespace GADemoFromZhihu
         }
 
         public Population(double retainRate, double selectionRate, double mutationRate, int chromosomeLength,
-            int chromosomeQuantity, int subValueQuantity)
+            int chromosomeQuantity, int subValueQuantity, FitnessFunctionDelegate fitnessFunction)
         {
             RetainRate = retainRate;
             SelectionRate = selectionRate;
@@ -22,6 +24,7 @@ namespace GADemoFromZhihu
             ChromosomeLength = chromosomeLength;
             SubValueQuantity = subValueQuantity;
             ChromosomeQuantity = chromosomeQuantity;
+            FitnessFunction = fitnessFunction;
         }
 
         //染色体集合
@@ -44,6 +47,9 @@ namespace GADemoFromZhihu
 
         //染色体长度（总长度）
         public int ChromosomeLength { get; }
+
+        //该种群适应度计算函数委托
+        public FitnessFunctionDelegate FitnessFunction { get; set; }
 
         //随机生成若干染色体
         public void RandomGenerateChromosome()
