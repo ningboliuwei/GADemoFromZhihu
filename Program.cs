@@ -2,13 +2,15 @@
 using System.Linq;
 using System.Text;
 
-namespace GADemoFromZhihu {
-    internal static class Program {
+namespace GADemoFromZhihu
+{
+    internal static class Program
+    {
         //染色体数量
         private const int ChromosomeQuantity = 100;
 
         //染色体长度
-        private const int ChromosomeLength = 33;
+        private const int ChromosomeLength = 11;
 
         //存活率
         private const double RetainRate = 0.2;
@@ -25,20 +27,21 @@ namespace GADemoFromZhihu {
         //进化代数
         private const int GenerationQuantity = 200;
 
-        private const int SubValueQuantity = 3;
+        private const int SubValueQuantity = 1;
 
         /// <summary>
         ///     应用程序的主入口点。
         /// </summary>
-        private static void Main () {
-            var population = new Population (RetainRate, SelectionRate, MutationRate, ChromosomeLength,
+        private static void Main()
+        {
+            var population = new Population(RetainRate, SelectionRate, MutationRate, ChromosomeLength,
                 ChromosomeQuantity, SubValueQuantity);
-            var builder = new StringBuilder ();
+            var builder = new StringBuilder();
 
             //指定测试函数的解空间上下界
-            TestFunction.SetBound (0, 9);
+            TestFunction.SetBound(0, 9);
             //随机生成染色体
-            population.RandomGenerateChromosome ();
+            population.RandomGenerateChromosome();
 
             #region 随机生成三角形测试数据
 
@@ -106,90 +109,68 @@ namespace GADemoFromZhihu {
 
             #endregion
 
-            #region 针对于一代中所有染色体的测试
-
-            foreach (var c in population.Chromosomes) {
-                builder.Clear ();
-                builder.Append ($"{OutputHelper.DisplayChromosomeBinaryValue(c)} ");
-
-                //                        所有映射到解空间的值（若有级联）
-                foreach (var value in c.SubValues) {
-                    builder.Append ($"{c.GetDecodedValue(value)} ");
-                }
-
-                var x = c.GetDecodedValue (c.SubValues[0]);
-                builder.Append ($"{(int) x}");
-                builder.Append (" | fitness: ");
-                builder.Append (TestFunction.Function1 (x));
-
-                Console.WriteLine (builder);
-            }
-
-            #endregion
 
             #region 进化 N 代
 
-            for (var i = 0; i < GenerationQuantity; i++) {
-                foreach (var d in population.Chromosomes) {
-                    builder.Clear ();
-                    builder.Append ($"{OutputHelper.DisplayChromosomeBinaryValue(d)} ");
-
-                    //                            所有映射到解空间的值（若有级联）
-                    //                    foreach (var value in d.SubValues)
-                    //                    {
-                    //                        builder.Append($"{d.GetDecodedValue(value)} ");
-                    //                    }
-
-                    var x = Convert.ToInt32 (d.GetDecodedValue (d.SubValues[0]));
-                    builder.Append ($"{x} ");
-                    builder.Append (" | fitness: ");
-                    builder.Append (TestFunction.Function1 (x));
-
-                    //                    Console.WriteLine(builder);
-                }
+//
+            for (var i = 0; i < GenerationQuantity; i++)
+            {
+//                foreach (var c in population.Chromosomes)
+//                {
+//                    builder.Clear();
+//                    builder.Append($"{OutputHelper.DisplayChromosomeBinaryValue(c)} ");
+//
+//                    //                            所有映射到解空间的值（若有级联）
+//                    //                    foreach (var value in d.SubValues)
+//                    //                    {
+//                    //                        builder.Append($"{d.GetDecodedValue(value)} ");
+//                    //                    }
+//
+//                    var x = c.GetDecodedValue(c.SubValues[0]);
+//                    builder.Append($"{x}");
+//                    builder.Append(" | fitness: ");
+//                    builder.Append(c.Fitness);
+//
+//                    //                    Console.WriteLine(builder);
+//                }
 
                 //找出拥有每一代最高 Fitnetss 值的那个实际的解
-                var maxFitness = population.Chromosomes.Max (n => n.Fitness);
-                var mostFittest = population.Chromosomes.First (e => Equals (e.Fitness, maxFitness));
+                var maxFitness = population.Chromosomes.Max(n => n.Fitness);
+                var mostFittest = population.Chromosomes.First(e => Equals(e.Fitness, maxFitness));
 
-                var a = Convert.ToInt32 (mostFittest.GetDecodedValue (mostFittest.SubValues[0]));
-
-                builder.Clear ();
-                builder.Append ($"after {i + 1:000} envolve(s): ");
-                //染色体二进制表示
-                //                builder.Append($"{OutputHelper.DisplayChromosomeBinaryValue(mostFittest)} ");
+                builder.Clear();
+                builder.Append($"after {i + 1:000} envolve(s): ");
+              
 
                 //所有映射到解空间的值（若有级联）
+                var decodedSubValuesString = string.Join(" ", mostFittest.SubValues.Select(v =>
+                    mostFittest.GetDecodedValue(v).ToString()).ToArray());
 
-                //                foreach (var subValue in mostFittest.SubValues)
-                //                {
-                //                    builder.Append(mostFittest.GetDecodedValue(subValue)).Append(" ");
-                //                }
-
-                builder.Append ($"{a}");
+                //染色体二进制表示 | 所有子值（即多输入参数拼接） | 适应度
+                builder.Append(
+                    $"{OutputHelper.DisplayChromosomeBinaryValue(mostFittest)} | {decodedSubValuesString} | fitness: {mostFittest.Fitness}");
                 // builder.Append ($"fitness: {TestFunction.StubbedTriangleTypeTestPathCoverage(a, b, c)} ");
                 // builder.Append ($"result: {TestFunction.TriangleTypeTest(a, b, c)} ");
                 // builder.Append ($"path: {TestFunction.TriangleTypeTestPathCoverage(a, b, c)}");
-                //                Console.WriteLine(builder);
+                Console.WriteLine(builder);
 
                 //进化过程中不同的选择策略
-                population.Envolve (Population.SelectType.Hybrid);
-                //                Console.ReadKey();
+                population.Envolve(Population.SelectType.Hybrid);
             }
 
-            for (int i = 0; i < 100; i++) {
-                string s = Console.ReadLine ();
-                var year = Convert.ToInt32 (s.Split (' ')[0]);
-                var month = Convert.ToInt32 (s.Split (' ')[1]);
-                var day = Convert.ToInt32 (s.Split (' ')[2]);
-
-                Console.WriteLine (TestFunction.NextDate (year, month, day));
-
-            }
+//            for (var i = 0; i < 100; i++)
+//            {
+//                var s = Console.ReadLine();
+//                var year = Convert.ToInt32(s.Split(' ')[0]);
+//                var month = Convert.ToInt32(s.Split(' ')[1]);
+//                var day = Convert.ToInt32(s.Split(' ')[2]);
+//
+//                Console.WriteLine(TestFunction.NextDate(year, month, day));
+//            }
 
             #endregion
 
-            Console.ReadKey ();
+            Console.ReadKey();
         }
     }
 }

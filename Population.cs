@@ -54,36 +54,15 @@ namespace GADemoFromZhihu
             {
                 var chromosome = new Chromosome {Population = this};
 
-                #region 暂时废弃 
-
                 //先随机生成 N 个片段，再合并
                 for (var j = 0; j < SubValueQuantity; j++)
                 {
                     //随机生成一个长度为 ChromosomeLength 的 1 / parameterQuantity 的染色体，每位(基因)是 1 或 0
-
-                    #region 使用位运算的方法，暂时废弃
-
-//                    var singleChromosomeLength = Convert.ToInt32(ChromosomeLength / SubValueQuantity);
-                    //                    for (var k = 0; k < singleChromosomeLength; k++)
-                    //                        segment += Convert.ToInt32(1 << k) * Convert.ToInt32(rnd.Next(0, 2));
-                    //                    segment += Convert.ToInt32(valueString, 2);
-                    //                    chromosome.Value += segment << ((SubValueQuantity - j - 1) * singleChromosomeLength);
-
-                    #endregion
-
                     var valueString = "";
                     for (var k = 0; k < ChromosomeLength; k++)
-                    {
                         valueString += Convert.ToInt32(rnd.Next(0, 2)).ToString();
-                    }
                     chromosome.Value = Convert.ToInt64(valueString, 2);
                 }
-
-                #endregion
-
-                //随机生成 ChromosomeLength 个 0 或 1，并拼接起来
-                //                for (var k = 0; k < ChromosomeLength; k++)
-                //                    chromosome.Value += (1 << k) * Convert.ToInt32(rnd.Next(0, 2));
 
                 Chromosomes.Add(chromosome);
             }
@@ -115,8 +94,7 @@ namespace GADemoFromZhihu
             var selectedChromosomes = new List<Chromosome>();
 
             //所有染色体的选择概率
-            var selectionRateList = (from c in sortedChromosomes
-                select c.Fitness / totalFitness).ToList();
+            var selectionRateList = sortedChromosomes.Select(c => c.Fitness / totalFitness).ToList();
             //所有染色体的累积选择概率
             var sumedSelectionRateList = new List<double>();
 
@@ -248,20 +226,11 @@ namespace GADemoFromZhihu
             Population parents = null;
 
             if (selectType == SelectType.Elite)
-            {
-                //精英选择
                 parents = EliteSelect(this);
-            }
             else if (selectType == SelectType.Roulette)
-            {
-                //轮盘赌选择
                 parents = RouletteSelect(this);
-            }
             else if (selectType == SelectType.Hybrid)
-            {
-                //精英与轮盘赌混合选择
                 parents = HybridSelect(this);
-            }
 
             //crossover 得到子女种群
             if (parents != null)
